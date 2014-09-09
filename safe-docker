@@ -41,7 +41,7 @@ for (@dirs) {
 }
 
 my @cmd;
-push @cmd, qw/docker run --rm --sig-proxy/;
+push @cmd, qw/docker run --rm --sig-proxy --net=none/;
 push @cmd, (sprintf "--user=%d:%d", $uid, $gid);
 push @cmd, (sprintf "--volume=%s:%s", $cwd, $cwd);
 push @cmd, (sprintf "--workdir=%s", $cwd, $cwd);
