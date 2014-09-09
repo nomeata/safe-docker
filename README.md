@@ -16,6 +16,11 @@ The docker image name is hardcoded in the script (`safe-docker`). If it were a
 command line flag, the userwho can run this script could start a malicious image
 downloaded from the internet.
 
+Not much is expected from the docker image. But some programs do not like it
+when the current user id has no name (e.g. those using `whoami`). If you need
+to run these, you need to add the user to your image’s `/etc/passwd`, and
+ensure that it has the same uid as the calling user.
+
 This script should be copied to, say, `/usr/local/bin` and made read-only for the
 user running it. Then the targetting user must get sudo permissions to run it,
 e.g. by adding the following lines via `visudo`:
