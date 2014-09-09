@@ -1,0 +1,71 @@
+#!/usr/bin/perl
+#
+# © 2014 Joachim Breitner <breitner@kit.edu> 
+# Licensed under the The MIT License (MIT)
+
+use Getopt::Long;
+use IPC::Run qw/ start run timeout /;
+use Cwd;
+
+# hardcoded, for security reasons
+my $image = 'safe-docker';
+
+my @dirs = ();
+my $timeout = 60;
+
+GetOptions (
+#	"image=s" => \$image,
+	"dir=s" => \@dirs,
+	"timeout=i" => \$timeout)
+or die("Error in command line arguments\n");
+
+# Now @ARGV is the command to run
+die "Missing command\n" unless @ARGV;
+
+die "Missing option --image \n" unless $image;
+
+die "Need to be run under sudo\n" unless exists $ENV{SUDO_UID};
+
+my $uid = $ENV{SUDO_UID};
+die "Cannot run as user root" unless $uid > 0;
+my $gid = $ENV{SUDO_GID};
+die "Cannot run as group root" unless $gid > 0;
+
+my $containername = "secure-tmp-$$";
+
+my $cwd = getcwd;
+
+die "CWD contains a :" if $cwd =~ /:/;
+for (@dirs) {
+	die "--dir $_ contains a :" if $_ =~ /:/;
+}
+
+my @cmd;
+push @cmd, qw/sudo docker run --rm --sig-proxy/;
+push @cmd, (sprintf "--user=%d:%d", $uid, $gid);
+push @cmd, (sprintf "--volume=%s:%s", $cwd, $cwd);
+push @cmd, (sprintf "--workdir=%s", $cwd, $cwd);
+push @cmd, (sprintf "--volume=%s:%s:ro", $_, $_) for @dirs;
+push @cmd, "--name", $containername;
+push @cmd, $image;
+push @cmd, @ARGV;
+
+sub kill_docker {
+	run ["docker", "kill", $containername ], \undef, '>/dev/null';
+	exit 1;
+}
+use sigtrap qw/handler kill_docker normal-signals/;
+
+
+# print @cmd;
+my $h = start \@cmd, timeout ($timeout);
+
+
+eval {
+  my $ret = $h->finish;
+};
+if ($@) {
+	my $x = $@;
+	kill_docker;
+}
+exit $h->result;
