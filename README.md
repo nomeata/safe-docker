@@ -17,5 +17,13 @@ command line flag, the userwho can run this script could start a malicious image
 downloaded from the internet.
 
 This script should be copied to, say, `/usr/local/bin` and made read-only for the
-user running it. Then the targetting user must get sudo permissions to run it.
+user running it. Then the targetting user must get sudo permissions to run it,
+e.g. by adding the following lines via `visudo`:
+
+    # Praktomat may use safe-docker
+    praktomat ALL= NOPASSWD: /usr/local/bin/safe-docker
+
+It requires `libipc-run-perl` to be installed. On Debian and Ubuntu, run
+
+    apt-get install libipc-run-perl
 

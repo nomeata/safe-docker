@@ -24,7 +24,7 @@ die "Missing command\n" unless @ARGV;
 
 die "Missing option --image \n" unless $image;
 
-die "Need to be run under sudo\n" unless exists $ENV{SUDO_UID};
+die "Needs to be run under sudo\n" unless ($< == 0 and exists $ENV{SUDO_UID});
 
 my $uid = $ENV{SUDO_UID};
 die "Cannot run as user root" unless $uid > 0;
@@ -41,7 +41,7 @@ for (@dirs) {
 }
 
 my @cmd;
-push @cmd, qw/sudo docker run --rm --sig-proxy/;
+push @cmd, qw/docker run --rm --sig-proxy/;
 push @cmd, (sprintf "--user=%d:%d", $uid, $gid);
 push @cmd, (sprintf "--volume=%s:%s", $cwd, $cwd);
 push @cmd, (sprintf "--workdir=%s", $cwd, $cwd);
