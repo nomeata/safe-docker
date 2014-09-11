@@ -16,6 +16,9 @@ The docker image name is hardcoded in the script (`safe-docker`). If it were a
 command line flag, the userwho can run this script could start a malicious image
 downloaded from the internet.
 
+Option `--timeout` specifies a timeout in seconds, after which the container is
+killed, and the special return value of 23 is returned.
+
 Not much is expected from the docker image. But some programs do not like it
 when the current user id has no name (e.g. those using `whoami`). If you need
 to run these, you need to add the user to your image’s `/etc/passwd`, and

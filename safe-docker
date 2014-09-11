@@ -52,7 +52,8 @@ push @cmd, @ARGV;
 
 sub kill_docker {
 	run ["docker", "kill", $containername ], \undef, '>/dev/null';
-	exit 1;
+	# magic value
+	exit 23;
 }
 use sigtrap qw/handler kill_docker normal-signals/;
 
