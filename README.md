@@ -8,7 +8,7 @@ and tries to enforce the following security measures:
  * The command is run as the user and group invoking sudo; it fails to
    run if it not invoked via sudo or by root.
  * Only the current directory is writable
- * Only the additional paths given on the command line are readable
+ * Only the additional paths given on the command line are readable (`--dir`)
  * Changes to the current directory are preserved
  * Upon SIGTERM (or any other signal), the container is killed
 
@@ -20,6 +20,10 @@ Not much is expected from the docker image. But some programs do not like it
 when the current user id has no name (e.g. those using `whoami`). If you need
 to run these, you need to add the user to your image’s `/etc/passwd`, and
 ensure that it has the same uid as the calling user.
+
+
+Environment variables are not passed through (which would also depend on `sudo`
+doing that), but you can prefix the command with `env VAR=value cmd`.
 
 This script should be copied to, say, `/usr/local/bin` and made read-only for the
 user running it. Then the targetting user must get sudo permissions to run it,
