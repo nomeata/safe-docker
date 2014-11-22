@@ -74,10 +74,10 @@ if ($@) {
 	kill_docker;
 }
 
-# This is the observed behaviour for out-of-memory, so lets repor that as a
-# timeout
+# This is the observed behaviour for out-of-memory, so lets report that as a
+# special value
 if ($h->result == 255) {
-	exit 23;
+	exit 24;
 }
 
 exit $h->result;
