@@ -6,6 +6,7 @@
 use Getopt::Long;
 use IPC::Run qw/ start run timeout /;
 use Cwd;
+use Data::GUID;
 
 # hardcoded, for security reasons
 my $image = 'safe-docker';
@@ -34,7 +35,7 @@ die "Cannot run as user root" unless $uid > 0;
 my $gid = $ENV{SUDO_GID};
 die "Cannot run as group root" unless $gid > 0;
 
-my $containername = "secure-tmp-$$";
+my $containername = sprintf "secure-tmp-%s", Data::GUID->new->as_string;
 
 my $cwd = getcwd;
 

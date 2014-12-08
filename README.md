@@ -39,7 +39,7 @@ e.g. by adding the following lines via `visudo`:
     # Praktomat may use safe-docker
     praktomat ALL= NOPASSWD: /usr/local/bin/safe-docker
 
-It requires `libipc-run-perl` to be installed. On Debian and Ubuntu, run
+It requires some perl libraries to be installed. On Debian and Ubuntu, run
 
-    apt-get install libipc-run-perl
+    apt-get install libipc-run-perl libdata-guid-perl
 
