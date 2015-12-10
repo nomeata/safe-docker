@@ -77,7 +77,7 @@ if ($@) {
 
 # This is the observed behaviour for out-of-memory, so lets report that as a
 # special value
-if ($h->result == 255) {
+if ($h->result == 255 or $h->result == 137) {
 	exit 24;
 }
 
