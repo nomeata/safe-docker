@@ -45,7 +45,7 @@ for (@dirs) {
 }
 
 my @cmd;
-push @cmd, qw/docker run --rm --read-only --sig-proxy --net=none/;
+push @cmd, qw!docker run --rm --read-only --sig-proxy --tmpfs /tmp --tmpfs /run --tmpfs /home --net=none!;
 push @cmd, (sprintf "--memory=%s", $maxmemory);
 push @cmd, (sprintf "--user=%d:%d", $uid, $gid);
 push @cmd, (sprintf "--volume=%s:%s:ro", $_, $_) for @dirs;
