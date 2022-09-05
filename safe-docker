@@ -14,12 +14,14 @@ my $image = 'safe-docker';
 my @dirs = ();
 my $timeout = 60;
 my $maxmemory = "1G";
+my $ulimits = ();
 
 GetOptions (
 #	"image=s" => \$image,
 	"dir=s" => \@dirs,
 	"timeout=i" => \$timeout,
 	"memory=s" => \$maxmemory,
+	'ulimit=s' => \@ulimits,
 	)
 or die("Error in command line arguments\n");
 
@@ -47,6 +49,7 @@ for (@dirs) {
 my @cmd;
 push @cmd, qw!docker run --rm --read-only --sig-proxy --tmpfs /tmp --tmpfs /run --tmpfs /home --net=none!;
 push @cmd, (sprintf "--memory=%s", $maxmemory);
+push @cmd, (sprintf "--ulimit=%s", $_) for @ulimits;
 push @cmd, (sprintf "--user=%d:%d", $uid, $gid);
 push @cmd, (sprintf "--volume=%s:%s:ro", $_, $_) for @dirs;
 push @cmd, (sprintf "--volume=%s:%s", $cwd, $cwd);

@@ -23,6 +23,9 @@ The option `--memory` does the same for memory usage. On Debian machines, this
 requires the kernel parameters `cgroup_enable=memory swapaccount=1`. Returns 24
 when OOM occurs.
 
+The option `--ulimit` sets ulimits for the container and expects a key-value pair
+separated by an equal sign (`=`). This option can be specified multiple times.
+
 Not much is expected from the docker image. But some programs do not like it
 when the current user id has no name (e.g. those using `whoami`). If you need
 to run these, you need to add the user to your image’s `/etc/passwd`, and
